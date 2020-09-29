@@ -1,0 +1,64 @@
+---
+title: "Bible Cross References Analysis"
+author: "Thiago Pires"
+date: "9/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+
+```
+
+## Organize data
+
+```{r}
+
+require(dplyr)
+require(magrittr)
+
+# read data
+dataset <- 
+    readr::read_csv("data/dataset.csv")
+
+# compute counts
+counts <- 
+    dataset %>% 
+    group_by(from_book, to_book) %>% 
+    count()
+
+counts %<>% 
+    reshape2::dcast(from_book ~ to_book,
+                    value.var = "n")
+
+# convert in matrix
+mat_counts <-
+    as.matrix(counts[ , -1])
+
+# replace by 0
+mat_counts[is.na(mat_counts)] <- 0 
+
+# adjust dimnames
+dimnames(mat_counts) <- 
+    list(from_book = mat_counts %>% colnames(),
+         to_book = mat_counts %>% colnames())
+
+```
+
+## Plot diagram 
+
+```{r}
+
+chorddiag::chorddiag(mat_counts, 
+                     showTicks = FALSE,
+                     palette = "Set2", 
+                     palette2 = "#Set3", 
+                     margin = 50,
+                     groupnameFontsize = 8,
+                     groupnamePadding = 10) %>% 
+    htmltools::div(., style="text-align: center;")
+
+```
