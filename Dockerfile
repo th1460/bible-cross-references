@@ -35,6 +35,8 @@ EXPOSE 80
 # Copy further configuration files into the Docker image
 COPY shiny-server.sh /usr/bin/shiny-server.sh
 
+RUN adduser -q shiny
+USER worker
 RUN ["chmod", "+x", "/usr/bin/shiny-server.sh"]
 
 CMD ["/usr/bin/shiny-server.sh"]
