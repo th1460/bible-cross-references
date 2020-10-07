@@ -1,7 +1,5 @@
 # Bible Cross References
 
-## Introduction
-
 Analysis and Shiny App about Bible Cross References
 
 ## Docker
